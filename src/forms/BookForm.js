@@ -1,70 +1,59 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
+import bookStore from "../stores/bookStore";
 
-import authorStore from "../stores/authorStore";
-
-class AuthorForm extends Component {
+class BookForm extends Component {
   state = {
-    first_name: "",
-    last_name: "",
-    imageUrl: "",
-    books: []
+    title: "",
+    color: "",
+    authors: [this.props.author.id]
   };
 
-  submitAuthor = async event => {
+  submitBook = async event => {
     event.preventDefault();
-    await authorStore.addAuthor(this.state);
-    if (!authorStore.errors) {
+    await bookStore.addBook(this.state);
+    if (!bookStore.errors) {
       this.props.closeModal();
     }
   };
 
   textChangeHandler = event => {
+    // console.log(event.target.value);
+
     this.setState({ [event.target.name]: event.target.value });
   };
 
   render() {
     return (
       <div className="mt-5 p-2">
-        <form onSubmit={this.submitAuthor}>
-          {authorStore.errors && (
+        <form onSubmit={this.submitBook}>
+          {bookStore.errors && (
             <div className="alert alert-danger" role="alert">
-              {authorStore.errors.map(error => (
+              {bookStore.errors.map(error => (
                 <p key={error}>{error}</p>
               ))}
             </div>
           )}
           <div className="input-group mb-3">
             <div className="input-group-prepend">
-              <span className="input-group-text">First Name</span>
+              <span className="input-group-text">Title</span>
             </div>
             <input
               onChange={event => this.textChangeHandler(event)}
               type="text"
               className="form-control"
-              name="first_name"
+              name="title"
             />
           </div>
           <div className="input-group mb-3">
             <div className="input-group-prepend">
-              <span className="input-group-text">Last Name</span>
+              <span className="input-group-text">Color</span>
             </div>
             <input
               onChange={event => this.textChangeHandler(event)}
               type="text"
               className="form-control"
-              name="last_name"
-            />
-          </div>
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text">Image URL</span>
-            </div>
-            <input
-              onChange={event => this.textChangeHandler(event)}
-              type="text"
-              className="form-control"
-              name="imageUrl"
+              name="color"
             />
           </div>
           <input type="submit" />
@@ -74,4 +63,4 @@ class AuthorForm extends Component {
   }
 }
 
-export default observer(AuthorForm);
+export default observer(BookForm);
